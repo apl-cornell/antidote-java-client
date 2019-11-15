@@ -4,3 +4,7 @@ Antidote.iml
 .gradle/
 build/
 gen/
+bin/
+.settings/
+.project
+.classpath
