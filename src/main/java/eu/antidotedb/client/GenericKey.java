@@ -3,7 +3,7 @@ package eu.antidotedb.client;
 import com.google.protobuf.ByteString;
 import eu.antidotedb.antidotepb.AntidotePB;
 
-public class GenericKey extends Key<Integer> {
+public class GenericKey extends Key<ByteString> {
 
     GenericKey(AntidotePB.CRDT_type type, ByteString key) {
         super(type, key);
@@ -19,7 +19,7 @@ public class GenericKey extends Key<Integer> {
         AntidotePB.ApbGenericUpdate.Builder genericUpdateInstruction = AntidotePB.ApbGenericUpdate.newBuilder();
         genericUpdateInstruction.setValue(bin);
         AntidotePB.ApbUpdateOperation.Builder updateOperation = AntidotePB.ApbUpdateOperation.newBuilder();
-        updateOperation.setGenericop(genericUpdateInstruction);
+        updateOperation.setGenop(genericUpdateInstruction);
         return new UpdateOpDefaultImpl(this, updateOperation);
     }
 

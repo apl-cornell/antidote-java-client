@@ -1,5 +1,6 @@
 package eu.antidotedb.client;
 
+import com.google.protobuf.ByteString;
 import eu.antidotedb.antidotepb.AntidotePB;
 
 import java.util.Collections;
@@ -11,10 +12,10 @@ import java.util.List;
 public abstract class ResponseDecoder<Value> {
     abstract Value readResponseToValue(AntidotePB.ApbReadObjectResp resp);
 
-    public static <T> ResponseDecoder<T> generic() {
-        return new ResponseDecoder<T>() {
+    public static ResponseDecoder<ByteString> generic() {
+        return new ResponseDecoder<ByteString>() {
             @Override
-            T readResponseToValue(AntidotePB.ApbObjectResp resp) {
+            ByteString readResponseToValue(AntidotePB.ApbReadObjectResp resp) {
                 if (resp == null) {
                     return null;
                 } else if (resp.getGeneric() == null) {
