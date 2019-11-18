@@ -1,6 +1,5 @@
 package eu.antidotedb.client;
 
-
 import com.google.protobuf.ByteString;
 import eu.antidotedb.antidotepb.AntidotePB;
 
@@ -8,10 +7,12 @@ import javax.annotation.CheckReturnValue;
 import java.util.Objects;
 
 /**
- * An Antidote key consists of a CRDT type and a corresponding key.
- * It can be used as a top-level-key of an Antidote object in a bucket or as a key in a map_rr.
+ * An Antidote key consists of a CRDT type and a corresponding key. It can be
+ * used as a top-level-key of an Antidote object in a bucket or as a key in a
+ * map_rr.
  * <p>
- * Use the static methods of this class to create keys for the respective CRDT types.
+ * Use the static methods of this class to create keys for the respective CRDT
+ * types.
  */
 public abstract class Key<Value> {
     private final AntidotePB.CRDT_type type;
@@ -36,9 +37,7 @@ public abstract class Key<Value> {
         return key;
     }
 
-
     abstract Value readResponseToValue(AntidotePB.ApbReadObjectResp resp);
-
 
     @Override
     public String toString() {
@@ -46,7 +45,8 @@ public abstract class Key<Value> {
     }
 
     /**
-     * Equality and hashCode on keys is defined only in terms of the key and type fields.
+     * Equality and hashCode on keys is defined only in terms of the key and type
+     * fields.
      */
     @Override
     public final boolean equals(Object obj) {
@@ -58,11 +58,20 @@ public abstract class Key<Value> {
     }
 
     /**
-     * Equality and hashCode on keys is defined only in terms of the key and type fields.
+     * Equality and hashCode on keys is defined only in terms of the key and type
+     * fields.
      */
     @Override
     public final int hashCode() {
         return Objects.hash(type, key);
+    }
+
+    public static GenericKey generic(ByteString key) {
+        return new GenericKey(AntidotePB.CRDT_type.GENERIC, key);
+    }
+
+    public static GenericKey generic(String key) {
+        return new GenericKey(AntidotePB.CRDT_type.GENERIC, ByteString.copyFromUtf8(key));
     }
 
     /**
@@ -80,16 +89,14 @@ public abstract class Key<Value> {
     }
 
     /**
-     * A counter CRDT.
-     * Is like a counter, but can be reset and is less efficient.
+     * A counter CRDT. Is like a counter, but can be reset and is less efficient.
      */
     public static CounterKey fatCounter(ByteString key) {
         return new CounterKey(AntidotePB.CRDT_type.FATCOUNTER, key);
     }
 
     /**
-     * A counter CRDT.
-     * Is like a counter, but can be reset and is less efficient.
+     * A counter CRDT. Is like a counter, but can be reset and is less efficient.
      */
     public static CounterKey fatCounter(String key) {
         return fatCounter(ByteString.copyFromUtf8(key));
@@ -132,8 +139,8 @@ public abstract class Key<Value> {
     }
 
     /**
-     * A multi-value register.
-     * Reading a value returns all written values, which are not overridden by another write-operation.
+     * A multi-value register. Reading a value returns all written values, which are
+     * not overridden by another write-operation.
      */
     public static <T> MVRegisterKey<T> multiValueRegister(ByteString key, ValueCoder<T> format) {
         return new MVRegisterKey<>(key, format);
@@ -145,7 +152,6 @@ public abstract class Key<Value> {
     public static MVRegisterKey<String> multiValueRegister(ByteString key) {
         return multiValueRegister(key, ValueCoder.utf8String);
     }
-
 
     /**
      * @see #multiValueRegister(ByteString, ValueCoder)
@@ -203,7 +209,6 @@ public abstract class Key<Value> {
         return set_removeWins(key, ValueCoder.utf8String);
     }
 
-
     /**
      * @see #set_removeWins(ByteString, ValueCoder)
      */
@@ -219,12 +224,13 @@ public abstract class Key<Value> {
     }
 
     /**
-     * Remove-resets map.
-     * Removing an entry resets the corresponding CRDT.
-     * Entries using a CRDT that does not support resets cannot be removed form the map.
-     * Therefore this map should mainly be used with embedded CRDTs that support a reset operation.
+     * Remove-resets map. Removing an entry resets the corresponding CRDT. Entries
+     * using a CRDT that does not support resets cannot be removed form the map.
+     * Therefore this map should mainly be used with embedded CRDTs that support a
+     * reset operation.
      * <p>
-     * Reading the map only returns entries which have a value, where the internal state is not equal to the initial CRDT state.
+     * Reading the map only returns entries which have a value, where the internal
+     * state is not equal to the initial CRDT state.
      */
     public static MapKey map_rr(ByteString key) {
         return new MapKey(AntidotePB.CRDT_type.RRMAP, key);
@@ -238,9 +244,8 @@ public abstract class Key<Value> {
     }
 
     /**
-     * Grow-only map.
-     * Does not support removing entries.
-     * It can be used for modelling struct, where the set of keys does not change over time.
+     * Grow-only map. Does not support removing entries. It can be used for
+     * modelling struct, where the set of keys does not change over time.
      */
     public static MapKey map_g(ByteString key) {
         return new MapKey(AntidotePB.CRDT_type.GMAP, key);
@@ -252,7 +257,6 @@ public abstract class Key<Value> {
     public static MapKey map_g(String key) {
         return map_g(ByteString.copyFromUtf8(key));
     }
-
 
     public static FlagKey flag_ew(ByteString key) {
         return new FlagKey(AntidotePB.CRDT_type.FLAG_EW, key);
@@ -270,14 +274,15 @@ public abstract class Key<Value> {
         return flag_dw(ByteString.copyFromUtf8(key));
     }
 
-    public static <V> MergeRegisterKey<V> mergeRegister(ByteString key, ValueCoder<V> format, MergeRegisterKey.ValueMerger<V> merger) {
+    public static <V> MergeRegisterKey<V> mergeRegister(ByteString key, ValueCoder<V> format,
+            MergeRegisterKey.ValueMerger<V> merger) {
         return new MergeRegisterKey<>(key, format, merger);
     }
 
-    public static <V> MergeRegisterKey<V> mergeRegister(String key, ValueCoder<V> format, MergeRegisterKey.ValueMerger<V> merger) {
+    public static <V> MergeRegisterKey<V> mergeRegister(String key, ValueCoder<V> format,
+            MergeRegisterKey.ValueMerger<V> merger) {
         return mergeRegister(ByteString.copyFromUtf8(key), format, merger);
     }
-
 
     AntidotePB.ApbMapKey.Builder toApbMapKey() {
         AntidotePB.ApbMapKey.Builder builder = AntidotePB.ApbMapKey.newBuilder();
@@ -297,35 +302,37 @@ public abstract class Key<Value> {
      */
     public static Key<?> create(AntidotePB.CRDT_type type, ByteString k) {
         switch (type) {
-            case COUNTER:
-                return counter(k);
-            case ORSET:
-                return set(k);
-            case LWWREG:
-                return register(k);
-            case MVREG:
-                return multiValueRegister(k);
-            case GMAP:
-                return map_g(k);
-            case RWSET:
-                return set_removeWins(k);
-            case RRMAP:
-                return map_rr(k);
-            case FATCOUNTER:
-                return fatCounter(k);
-            case FLAG_EW:
-                return flag_ew(k);
-            case FLAG_DW:
-                return flag_dw(k);
-            default:
-                throw new RuntimeException("CRDT not yet supported: " + type);
+        case COUNTER:
+            return counter(k);
+        case ORSET:
+            return set(k);
+        case LWWREG:
+            return register(k);
+        case MVREG:
+            return multiValueRegister(k);
+        case GMAP:
+            return map_g(k);
+        case RWSET:
+            return set_removeWins(k);
+        case RRMAP:
+            return map_rr(k);
+        case FATCOUNTER:
+            return fatCounter(k);
+        case FLAG_EW:
+            return flag_ew(k);
+        case FLAG_DW:
+            return flag_dw(k);
+        case GENERIC:
+            return generic(k);
+        default:
+            throw new RuntimeException("CRDT not yet supported: " + type);
         }
     }
 
     /**
-     * Creates a reset operation.
-     * If the underlying CRDT type has full support for reset, this operation has the effect
-     * of undoing all previous operations and it has no effect on concurrent operations.
+     * Creates a reset operation. If the underlying CRDT type has full support for
+     * reset, this operation has the effect of undoing all previous operations and
+     * it has no effect on concurrent operations.
      * <p>
      * Use the methods on {@link Bucket} to execute the update.
      */
