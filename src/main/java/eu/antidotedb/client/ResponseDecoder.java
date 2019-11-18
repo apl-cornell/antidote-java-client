@@ -11,6 +11,19 @@ import java.util.List;
 public abstract class ResponseDecoder<Value> {
     abstract Value readResponseToValue(AntidotePB.ApbReadObjectResp resp);
 
+    public static <T> ResponseDecoder<T> generic() {
+        return new ResponseDecoder<T>() {
+            @Override
+            T readResponseToValue(AntidotePB.ApbObjectResp resp) {
+                if (resp == null) {
+                    return null;
+                } else if (resp.getGeneric() == null) {
+                    throw new AntidoteException("Invalid response " + resp);
+                }
+                return resp.getGeneric().getValue();
+            }
+        };
+    }
 
     public static ResponseDecoder<Integer> counter() {
         return new ResponseDecoder<Integer>() {
@@ -79,7 +92,6 @@ public abstract class ResponseDecoder<Value> {
     public static ResponseDecoder<List<String>> set() {
         return set(ValueCoder.utf8String);
     }
-
 
     public static <K> ResponseDecoder<MapKey.MapReadResult> map() {
         return new ResponseDecoder<MapKey.MapReadResult>() {
