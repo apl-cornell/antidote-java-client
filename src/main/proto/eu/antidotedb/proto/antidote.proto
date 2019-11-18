@@ -1,7 +1,7 @@
 syntax = "proto2";
 
 // Java package specifiers
-option java_package = "com.basho.riak.protobuf";
+option java_package = "eu.antidotedb.antidotepb";
 option java_outer_classname = "AntidotePB";
 
 
@@ -273,21 +273,21 @@ message ApbCreateDCResp {
 message ApbGetConnectionDescriptor {
 }
 
-message ApbGetConnectionDescriptorResp {
+message ApbGetConnectionDescriptorResponse {
   required bool success = 1;
   //structure of descriptor is internal to antidote.
-  optional bytes descriptor = 2;
+  optional bytes conDesc = 2;
   optional uint32 errorcode = 3;
 }
 
 // Connect DC with each other to start replication.
 // This message must be send to all DCs.
-message ApbConnectToDCs {
+message ApbConnectToDcs {
   // descriptors is a list of connection information of all DCs obtained from ApbGetConnectionDescriptorResp.descriptor
     repeated bytes descriptors = 1;
 }
 
-message ApbConnectToDCsResp {
+message ApbConnectToDcsResp {
   required bool success = 1;
   optional uint32 errorcode = 2;
 }
