@@ -1,6 +1,7 @@
 package eu.antidotedb.client;
 
 import com.google.protobuf.ByteString;
+import javax.annotation.CheckReturnValue;
 import eu.antidotedb.antidotepb.AntidotePB;
 
 public class GenericKey extends Key<ByteString> {
