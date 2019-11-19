@@ -12,6 +12,8 @@ apply plugin: 'com.google.protobuf'
 sourceCompatibility = 1.8
 
 
+tasks.withType(Javadoc).all { enabled = false } //
+
 buildscript {
     repositories {
         mavenCentral()
