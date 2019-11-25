@@ -29,7 +29,7 @@ message ApbErrorResp {
 
 // Generic update
 message ApbGenericUpdate {
-    required bytes value = 1;
+    repeated bytes value = 1;
 }
 
 // Generic response
