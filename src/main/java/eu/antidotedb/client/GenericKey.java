@@ -34,10 +34,8 @@ public class GenericKey extends Key<ByteString> {
     @CheckReturnValue
     public UpdateOpDefaultImpl invokeAll(Iterable<? extends ByteString> values) {
         AntidotePB.ApbGenericUpdate.Builder op = AntidotePB.ApbGenericUpdate.newBuilder();
-        int i = 0;
         for (ByteString value : values) {
-            op.setValue(i, value);
-            i++;
+            op.addValue(value);
         }
 
         AntidotePB.ApbUpdateOperation.Builder update = AntidotePB.ApbUpdateOperation.newBuilder();
