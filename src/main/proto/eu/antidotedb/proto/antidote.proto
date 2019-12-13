@@ -1,3 +1,5 @@
+syntax = "proto2";
+
 // Java package specifiers
 option java_package = "eu.antidotedb.antidotepb";
 option java_outer_classname = "AntidotePB";
@@ -14,7 +16,8 @@ enum CRDT_type {
     FATCOUNTER = 12;
     FLAG_EW = 13;
     FLAG_DW = 14;
-    GENERIC = 15;
+    BCOUNTER = 15;
+    GENERIC = 16;
 }
 
 // Riak Error response
@@ -151,6 +154,8 @@ message ApbOperationResp {
 message ApbTxnProperties {
     optional uint32 read_write = 1 ; //default = 0 = read_write, 1 = read_only, 2 = write_only
     optional uint32 red_blue = 2 ; // default = 0 = blue, 1 = red
+    repeated bytes shared_locks = 3;
+    repeated bytes exclusive_locks = 4;
 }
 
 // Object (Key) representation
@@ -259,20 +264,30 @@ message ApbCreateDC {
   repeated string nodes = 1;
 }
 
+message ApbCreateDCResp {
+  required bool success = 1;
+  optional uint32 errorcode = 2;
+}
+
 // Get a connection descriptor of the DC to be given to other DCs.
 message ApbGetConnectionDescriptor {
 }
 
-message ApbGetConnectionDescriptorResponse {
+message ApbGetConnectionDescriptorResp {
   required bool success = 1;
   //structure of descriptor is internal to antidote.
-  optional bytes conDesc = 2;
+  optional bytes d = 2;
   optional uint32 errorcode = 3;
 }
 
 // Connect DC with each other to start replication.
 // This message must be send to all DCs.
-message ApbConnectToDcs {
+message ApbConnectToDCs {
   // descriptors is a list of connection information of all DCs obtained from ApbGetConnectionDescriptorResp.descriptor
     repeated bytes descriptors = 1;
+}
+
+message ApbConnectToDCsResp {
+  required bool success = 1;
+  optional uint32 errorcode = 2;
 }
