@@ -4,6 +4,8 @@ import com.google.protobuf.ByteString;
 import eu.antidotedb.antidotepb.AntidotePB;
 
 import javax.annotation.CheckReturnValue;
+
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -14,7 +16,7 @@ import java.util.Objects;
  * Use the static methods of this class to create keys for the respective CRDT
  * types.
  */
-public abstract class Key<Value> {
+public abstract class Key<Value> implements Serializable {
     private final AntidotePB.CRDT_type type;
     private final ByteString key;
 

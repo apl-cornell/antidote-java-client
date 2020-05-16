@@ -3,13 +3,15 @@ package eu.antidotedb.client;
 import com.google.protobuf.ByteString;
 
 import java.util.Collections;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.CheckReturnValue;
 import eu.antidotedb.antidotepb.AntidotePB;
 
-public class GenericKey extends Key<ByteString> {
+public class GenericKey extends Key<ByteString> implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     GenericKey(AntidotePB.CRDT_type type, ByteString key) {
         super(type, key);
